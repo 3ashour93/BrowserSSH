@@ -1,0 +1,149 @@
+<html> 
+
+	<head>
+		<script type="text/javascript" src="static/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="static/jquery-ui/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="static/Bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="static/layout.js"></script>
+		<link rel="stylesheet" href="static/jquery-ui/jquery-ui.min.css">
+		<link rel="stylesheet" href="static/jquery-ui/jquery-ui.structure.min.css">
+		<link rel="stylesheet" href="static/jquery-ui/jquery-ui.theme.min.css">
+		<link rel="stylesheet" type="text/css" href="static/Bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="static/Bootstrap/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="static/terminal-css.css">
+    <script type="text/javascript" src="static/ace-builds-master/src-min-noconflict/ace.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script> 
+ 
+<!-- load ace modelist extension -->
+    <script src="static/ace-builds-master/src-min-noconflict/ext-modelist.js"></script>
+    
+    <link href="static/bootstrap-sidebar/css/simple-sidebar.css" rel="stylesheet">
+		<style>
+    body {
+        overflow: hidden;
+    }
+    #editor {
+        height: 400px;   
+    }
+  		</style>
+	</head>
+	<body>
+    <!-- ________________The navigation bar________________________ --> 
+		<nav class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">Browser-SSH</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li id="LS"><a href="#menu-toggle" id="menu-toggle">LS</a>
+            </li>
+            <li><a href="" data-toggle="modal" data-target="#color-picker">Layout</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+          <li id="theme_tab">
+              <select class="form-control" id="theme_selector" data-toggle="tooltip" title="Choose Editor Theme"> 
+              <option value="monokai">Sublime</option>
+              <option value="github">GitHub</option>
+              <option value="eclipse">Eclipse</option>
+              <option value="textmate">TextMate</option>
+              </select>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <!-- ____________________the content_____________________________ --> 
+    <div id="wrapper" class="toggled">
+    <!-- __________ the files and folders for the terminal ______ -->
+    <div id="sidebar-wrapper">
+            <ul class="sidebar-nav" id="ls">
+            </ul>
+    </div>
+    <!-- _________actual content____________-->  
+    <div id='container' >
+        <div id="editor-container">
+          <button id="save" type="button" class="btn btn-default">save changes</button>
+          <button id="close" type="button" class="btn btn-default">close</button>
+          <div id="editor"></div>
+        </div>
+
+        <div id='std-out'><p id='std-out2'></p>
+        </div>
+        <form id="stdinF">
+        <input type="text" class="form-control" placeholder="Command" id ="std-in">
+        </form>
+    </div>
+    </div>
+<!-- ___________________________________________________________ -->
+<!--____________color picker modal ____________-->
+    <div class="modal fade" id="color-picker" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Pick a color</h4>
+        </div>
+        <div class="modal-body" id="wrap-colors">
+          <div class="ui-widget-content" id="term-bg">
+            <h5>Terminal Color</h5> 
+            <div id="red-1"></div>
+            <div id="green-1"></div>
+            <div id="blue-1"></div>
+            <div id="swatch-1" class="ui-widget-content ui-corner-all"></div>
+          </div>
+          <div class="ui-widget-content" id="term-text"> 
+            <h5>Terminal Font Color</h5>
+            <div id="red-2"></div>
+            <div id="green-2"></div>
+            <div id="blue-2"></div>
+            <div id="swatch-2" class="ui-widget-content ui-corner-all"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="change-color" onclick='changeColors()'>Change Colors</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  <!-- _____________Login to Machine Modal _____________-->
+  <div class="modal fade" id="machine_login_modal"  data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content"> 
+      <div class="modal-header">
+        <h4 class="modal-title">Machine Credentials</h4>
+      </div>
+      <div class="modal-body">
+        <form role="form" id="loginStuff">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" class="form-control" id="username" placeholder="Enter Username">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Enter Password">
+          </div>
+          <div class="form-group">
+            <label>Host-Name</label>
+            <input type="text" class="form-control" id="host" placeholder="Enter Host-Name">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" data-dismiss="modal" id="login">Login</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+  </div><!-- /.modal --> 
+  <div id="dump" style="display: none">
+  </div>
+</body>
+</html> 
+

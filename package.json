@@ -1,0 +1,19 @@
+{
+  "name": "MySite",
+  "version": "0.0.1",
+  "private": "true",
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "cookie-parser": "*",
+    "express-session": "*",
+    "bcrypt-nodejs": "*",
+    "sqlite3": "*",
+    "socket.io": "*",
+    "ansi_up": "*",
+    "ssh2": "*",
+    "ejs": "*"
+  }
+}
