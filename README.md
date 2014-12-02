@@ -1,4 +1,4 @@
 BrowserSSH
 ==========
 
-Web apps Project: view on www.bssh-test.herokuapp.com
+Web apps Project: view on bssh-test.herokuapp.com
